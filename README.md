@@ -1,3 +1,10 @@
+
+MODIFIED in this fork
+============
+Remove screen resolution parsing which generate DOT file, which requires X11 server.
+
+Sometimes I just want a dot file, and use graphviz to generate the tree by myself.
+
 LICHeE: Fast and scalable inference of multi-sample cancer lineages
 ============
 
