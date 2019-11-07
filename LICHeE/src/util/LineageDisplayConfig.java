@@ -388,7 +388,7 @@ public class LineageDisplayConfig {
 		if(n.isRoot()) {
 			return "GL";
 		} else if (!n.isLeaf()) {
-			return n.getSize() + "";
+			return "" + (nid - 1) + "(" + n.getSize() + ")";
 		}
 		return "";
 	}
