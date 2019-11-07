@@ -37,45 +37,45 @@ public class LineageDisplayConfig {
 
 	// colors
 	static class ColorPalette {
-		public static Color[] palette = {new Color(255,255,255), new Color(200,155,82), new Color(100,100,117), new Color(194,110,144), 
-				new Color(255,101,101), new Color(212,196,184), new Color(3,115,129), new Color(23,118,191), new Color(109,113,63), 
-				new Color(146,185,132), new Color(207,46,28), 
+		public static Color[] palette = {new Color(255,255,255), new Color(200,155,82), new Color(100,100,117), new Color(194,110,144),
+				new Color(255,101,101), new Color(212,196,184), new Color(3,115,129), new Color(23,118,191), new Color(109,113,63),
+				new Color(146,185,132), new Color(207,46,28),
 				new Color(47,75,124), new Color(254,224,0), new Color(205,92,92), new Color(0,128,128), new Color(106,90,205),
 				new Color(136,232,190), new Color(33,57,61), new Color(60,144,163), new Color(233,180,0), new Color(191,93,71),
 				new Color(40,95,107), new Color(112,143,0), new Color(130,157,186), new Color(211,51,63), new Color(147,53,69)};
-		
+
 		public static Color genColorDiff(int i, int n) {
 			return Color.getHSBColor((float)i/(float)n, 0.75f, 1.0f);
 		}
-		
+
 		public static Color pastelify(Color c) {
 			 return new Color((c.getRed() + 255)/2, (c.getGreen() + 255)/2, (c.getBlue() + 255)/2);
 		}
-		
+
 		public static Color genColorRand(Random rand) {
 		    return new Color((rand.nextInt(256) + 255)/2, (rand.nextInt(256) + 255)/2, (rand.nextInt(256) + 255)/2);
 		}
-		
+
 		public static Color getEdgeColor(Color c) {
 			return new Color(c.getRed(), c.getGreen(), c.getBlue(), 0x77);
 		}
-		
+
 		public static Color getBorderColor(Color c) {
 			return c.darker();
 		}
-		
+
 		public static Color getBorderHighlighColor(Color c) {
 			return HIGHLIGHT_COLOR;
 		}
-		
+
 		public static Color getNodeHighlighColor(Color c) {
 			return c;
 		}
-		
+
 		public static Color makeTransparent(Color c) {
 			return new Color(c.getRed(), c.getGreen(), c.getBlue(), 0x77);
 		}
-		
+
 		public static Color SELECTED_NODE_COLOR = Color.yellow;
 		public static Color INTERNAL_NODE_BORDER_COLOR = Color.BLACK;
 		public static Color LEAF_NODE_BORDER_COLOR = Color.BLACK;
@@ -85,7 +85,7 @@ public class LineageDisplayConfig {
 		public static Color EDGE_COLOR = Color.BLACK;
 		public static Color HIGHLIGHT_COLOR = new Color(186,85,211);
 	}
-	
+
 	// fonts
 	public static Font GUI_FONT = new Font("Comic Sans MS", Font.BOLD, 16);
 	public static Font CONSOLE_FONT = new Font("Comic Sans MS", Font.PLAIN, 14);
@@ -94,7 +94,7 @@ public class LineageDisplayConfig {
 	public static Font EDGE_FONT = new Font("Comic Sans MS", Font.BOLD, 18);
 	public static Font PLAIN_FONT = new Font("Arial", Font.PLAIN, 20);
 	public static Font DOT_FONT = new Font("Arial", Font.BOLD, 24);
-		
+
 	// shapes
 	public static Shape LEAF_NODE_SHAPE = new Rectangle2D.Float(-40, -40, 80, 80);
 	public static Shape getInternalNodeShape(int size) {
@@ -103,7 +103,7 @@ public class LineageDisplayConfig {
         if(w > 80) w = 100;
 		return new Ellipse2D.Float(-w/2, -w/2, w, w);
 	}
-	
+
 	protected boolean beautify;
 	protected boolean subclone_path_highligth;
 	protected boolean subclone_sample_highligth;
@@ -112,23 +112,23 @@ public class LineageDisplayConfig {
 	protected boolean[] nodeSelected;
 	Icon[] nodeIcons;
 	boolean[] nodeIconPainted;
-	
-	
+
+
 	protected DirectedGraph<Integer, Integer> displayTree;
 	protected PHYTree spanningTree;
 	protected PHYNetwork constrNetwork;
 	protected HashMap<Integer, PHYNode> nodeInfo;
 	protected ArrayList<String> sampleNames;
 	protected Random randGen;
-	
-	
+
+
 	public LineageDisplayConfig(PHYNetwork network, PHYTree tree, ArrayList<String> samples, boolean colorful) {
 		constrNetwork = network;
 		spanningTree = tree;
 		sampleNames = samples;
 		beautify = colorful;
 		computeDisplayTree();
-		
+
 		int numNodes = displayTree.getVertexCount() + 1;
 		subclone_path_highligth = false;
 		subclone_sample_highligth = false;
@@ -141,13 +141,13 @@ public class LineageDisplayConfig {
 			randGen = new Random(85354597);
 			nodeColors = new Color[numColors];
 			for(int i = 0; i < numColors; i++) {
-				nodeColors[i] = (i < ColorPalette.palette.length) ? ColorPalette.pastelify(ColorPalette.palette[i]) : ColorPalette.genColorRand(randGen); 
+				nodeColors[i] = (i < ColorPalette.palette.length) ? ColorPalette.pastelify(ColorPalette.palette[i]) : ColorPalette.genColorRand(randGen);
 			}
 		}
 	}
-	
-	public void computeDisplayTree() {			
-		displayTree = new DirectedSparseGraph<Integer, Integer>();	
+
+	public void computeDisplayTree() {
+		displayTree = new DirectedSparseGraph<Integer, Integer>();
 		nodeInfo = new HashMap<Integer, PHYNode>();
 		int edgeId = 0;
 		for (PHYNode n : spanningTree.treeEdges.keySet()) {
@@ -162,13 +162,13 @@ public class LineageDisplayConfig {
 				edgeId++;
 			}
 		}
-		
+
 		// add sample leaves
 		for(int i = 1; i < constrNetwork.numSamples; i++) {
 			PHYNode n = new PHYNode(0, i, constrNetwork.numNodes + i);
 			displayTree.addVertex(n.getNodeId());
 			nodeInfo.put(n.getNodeId(), n);
-			// find a parent in the closest higher level		 
+			// find a parent in the closest higher level
 			boolean found = false;
 			ArrayList<PHYNode> parents = new ArrayList<PHYNode>();
 			ArrayList<PHYNode> sameLevelParents = new ArrayList<PHYNode>();
@@ -201,7 +201,7 @@ public class LineageDisplayConfig {
 					}
 				}
 				sameLevelParents.removeAll(toRemove);
-				
+
 				for(PHYNode n2 : sameLevelParents) {
 					displayTree.addEdge(edgeId, n2.getNodeId(), n.getNodeId());
 					edgeId++;
@@ -212,9 +212,9 @@ public class LineageDisplayConfig {
 				displayTree.addEdge(edgeId, 0, n.getNodeId());
 				edgeId++;
 			}
-		}				
+		}
 	}
-	
+
 	private String edge2DOT(Integer e) {
 		String s = "";
 		Integer n1 = displayTree.getSource(e);
@@ -227,7 +227,7 @@ public class LineageDisplayConfig {
 		s += "];\n";
 		return s;
 	}
-	
+
 	private String node2DOT(Integer v, String tempImageDir, long timestamp) {
 		String s = v + " [";
 		if(nodeInfo.get(v).isRoot()) {
@@ -245,7 +245,7 @@ public class LineageDisplayConfig {
 					e.printStackTrace();
 				}
 				s += "image=\"" + outputfile.getAbsolutePath() + "\"";
-			} 
+			}
 			s += " shape=square";
 			s += " label=\"" + getExternalNodeLabel(v) + "\"";
 			s += " labelloc=b";
@@ -259,13 +259,13 @@ public class LineageDisplayConfig {
 		s += " style=filled fillcolor=\"" + String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()) + "\"";
 		c = Color.black; //getNodeBorderColor(v);
 		s += " color=\"" + String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()) + "\"";
-		s += " width=" + getNodeShape(v).getBounds().getWidth()/Toolkit.getDefaultToolkit().getScreenResolution() + "";
-		s += " heigth=" + getNodeShape(v).getBounds().getHeight()/Toolkit.getDefaultToolkit().getScreenResolution() + "";
+		//s += " width=" + getNodeShape(v).getBounds().getWidth()/Toolkit.getDefaultToolkit().getScreenResolution() + "";
+		//s += " heigth=" + getNodeShape(v).getBounds().getHeight()/Toolkit.getDefaultToolkit().getScreenResolution() + "";
 		s += "];\n";
-	    
+
 		return s;
 	}
-	
+
 	public String toDOT(String tempImageDirParent) {
 		String t = "";
 		t += "digraph G { \n";
@@ -274,7 +274,7 @@ public class LineageDisplayConfig {
 		for(Integer e : displayTree.getEdges()) {
 			t += edge2DOT(e);
 		}
-		
+
 		String tempDirName = "/lichee_dot_img_temp";
 		long ts = 0;
 		if(beautify) {
@@ -293,11 +293,11 @@ public class LineageDisplayConfig {
 		t += "}";
 		return t;
 	}
-	
+
 	public Color getNodeLabelColor(Integer nid) {
 		return LineageDisplayConfig.ColorPalette.LABEL_COLOR;
 	}
-	
+
 	public Color getNodeFillColor(Integer nid) {
 		PHYNode n = nodeInfo.get(nid);
 		if(n.isRoot()) return Color.WHITE;
@@ -310,10 +310,10 @@ public class LineageDisplayConfig {
 		}
 		if(subclone_path_highligth && nodeHighlight[nid]) {
 			return ColorPalette.getNodeHighlighColor(c);
-		} 
+		}
 		return c;
 	}
-	
+
 	public Color getNodeBorderColor(Integer nid) {
 		PHYNode n = nodeInfo.get(nid);
 		if(n.isRoot()) return Color.WHITE;
@@ -327,10 +327,10 @@ public class LineageDisplayConfig {
 		}
 		if(subclone_path_highligth && nodeHighlight[nid]) {
 			return ColorPalette.getBorderHighlighColor(c);
-		} 
+		}
 		return c;
 	}
-	
+
 	public Color getEdgeColor(Integer nid1, Integer nid2) {
 		PHYNode n1 = nodeInfo.get(nid1);
 		Color c = LineageDisplayConfig.ColorPalette.EDGE_COLOR;
@@ -339,14 +339,14 @@ public class LineageDisplayConfig {
 			if(n1.isRoot()) {
 				c = ColorPalette.getEdgeColor(Color.BLACK);
 			}
-		} 
+		}
 		if(subclone_path_highligth && nodeHighlight[nid1] && nodeHighlight[nid2]) {
 			return ColorPalette.getBorderHighlighColor(c);
-		} 
+		}
 		return c;
-		
+
 	}
-	
+
 	public Font getNodeFont(Integer nid) {
 		if(!beautify) return PLAIN_FONT;
 		PHYNode n = nodeInfo.get(nid);
@@ -356,7 +356,7 @@ public class LineageDisplayConfig {
 			return INTERNAL_NODE_FONT;
 		}
 	}
-	
+
 	public Font getEdgeFont() {
 		if(beautify) {
 			return LineageDisplayConfig.EDGE_FONT;
@@ -364,16 +364,16 @@ public class LineageDisplayConfig {
 			return LineageDisplayConfig.PLAIN_FONT;
 		}
 	}
-	
+
 	public Shape getNodeShape(Integer nid) {
 		PHYNode n = nodeInfo.get(nid);
 		if(n.isLeaf()) {
 			return LineageDisplayConfig.LEAF_NODE_SHAPE;
 		}
-		return getInternalNodeShape(n.getSize()); 
+		return getInternalNodeShape(n.getSize());
 	}
-	
-	// only leaf nodes are currently labeled 
+
+	// only leaf nodes are currently labeled
 	public String getExternalNodeLabel(Integer nid) {
 		PHYNode n = nodeInfo.get(nid);
 		if(n.isLeaf()) {
@@ -382,7 +382,7 @@ public class LineageDisplayConfig {
 			return "";
 		}
 	}
-	
+
 	public String getInternalNodeLabel(Integer nid) {
 		PHYNode n = nodeInfo.get(nid);
 		if(n.isRoot()) {
@@ -392,8 +392,8 @@ public class LineageDisplayConfig {
 		}
 		return "";
 	}
-	
-	// only leaf edges are currently labeled 
+
+	// only leaf edges are currently labeled
 	public String getEdgeLabel(Integer nid1, Integer nid2) {
 		PHYNode n1 = nodeInfo.get(nid1);
 		PHYNode n2 = nodeInfo.get(nid2);
@@ -406,12 +406,12 @@ public class LineageDisplayConfig {
 		}
 		return label;
 	}
-	
+
 	public String getConsoleText(Integer nid) {
 		PHYNode n = nodeInfo.get(nid);
 		if(n.isRoot()) return "";
-		if(n.isLeaf()) { // sample 
-			return spanningTree.getLineage(n.getLeafSampleId(), sampleNames.get(n.getLeafSampleId()));		                	
+		if(n.isLeaf()) { // sample
+			return spanningTree.getLineage(n.getLeafSampleId(), sampleNames.get(n.getLeafSampleId()));
         } else {
         	String s = "***Cluster " + n.getNodeId() + "***\n";
     		s += "Binary sample presence profile: " + n.getSNVGroup().getTag() + "\n";
@@ -423,7 +423,7 @@ public class LineageDisplayConfig {
     		s += "\n";
     		s += n.getCluster().toString();
         	s += "\nMutations (chr:pos, info):\n";
-         	ArrayList<SNVEntry> snvs = n.getSNVs(n.getSNVGroup().getSNVs());         	
+         	ArrayList<SNVEntry> snvs = n.getSNVs(n.getSNVGroup().getSNVs());
          	for(SNVEntry snv : snvs) {
          		s += snv.getChromosome() + ":";
          		s += snv.getPosition() + ".........";
@@ -432,7 +432,7 @@ public class LineageDisplayConfig {
          	return s;
          }
 	}
-	
+
 	public Icon getNodeIcon(final Integer nid) {
 		final PHYNode n = nodeInfo.get(nid);
 		final Shape s = getNodeShape(nid);
@@ -458,12 +458,12 @@ public class LineageDisplayConfig {
 			};
 			return nodeIcons[nid];
 		}
-		
+
 		final int sampleId = n.getLeafSampleId();
 		ArrayList<ArrayList<PHYNode>> lineages = new ArrayList<ArrayList<PHYNode>>();
 		spanningTree.getLineageClusters(new ArrayList<PHYNode>(), lineages, spanningTree.getRoot(), n.getLeafSampleId());
 		final ArrayList<ArrayList<PHYNode>> paths = lineages;
-		
+
 		nodeIcons[nid] = new Icon() {
 			public int getIconHeight() {
 				return h;
@@ -475,7 +475,7 @@ public class LineageDisplayConfig {
 				if(!beautify) {
 					return;
 				}
-				
+
 				Rectangle[] boxes = new Rectangle[constrNetwork.numNodes];
 				int[] boxOffsetX = new int[constrNetwork.numNodes];
 				int[] boxOffsetY = new int[constrNetwork.numNodes];
@@ -490,7 +490,7 @@ public class LineageDisplayConfig {
 					ArrayList<PHYNode> path = paths.get(i);
 					for(int j = 0; j < path.size(); j++) {
 						PHYNode cluster = path.get(j);
-						
+
 						Rectangle r = boxes[cluster.getNodeId()];
 						if(r == null) { // must create a new box for the node
 							if(j == 0) { // no parent (always vertical)
@@ -507,15 +507,15 @@ public class LineageDisplayConfig {
 								if(j % 2 == 0) { // vertical
 									H = (int) Math.floor(2*cluster.getAAF(n.getLeafSampleId())*aBOX/W);
 									if(parent.height < H) { // possible due to overflow
-										H = parent.height; 
-									} 
+										H = parent.height;
+									}
 									yOffset = boxOffsetY[parentId];
 									boxOffsetY[parentId] += H;
 								} else { // horizontal
 									W = (int) Math.floor(2*cluster.getAAF(n.getLeafSampleId())*aBOX/H);
 									if(parent.width < W) { // possible due to VAF overflow
-										W = parent.width; 
-									} 
+										W = parent.width;
+									}
 									xOffset = boxOffsetX[parentId];
 									boxOffsetX[parentId] += W;
 								}
@@ -525,11 +525,11 @@ public class LineageDisplayConfig {
 								}
 								if(parent.y + yOffset + H >= Y + hBOX) {
 									H = Y + hBOX - (parent.y + yOffset);
-								}	
+								}
 								r = new Rectangle(parent.x + xOffset, parent.y + yOffset, W, H);
 							}
 							boxes[cluster.getNodeId()] = r;
-							
+
 							// draw
 							g.setColor(nodeColors[cluster.getNodeId()]);
 							g.fillRect(r.x, r.y, r.width, r.height);
@@ -538,7 +538,7 @@ public class LineageDisplayConfig {
 							g.drawLine(r.x, r.y, r.x + r.width, r.y);
 							g.drawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
 							g.drawLine(r.x, r.y + r.height, r.x + r.width, r.y + r.height);
-							
+
 							if(subclone_sample_highligth && nodeSelected[cluster.getNodeId()]) {
 								highlight.add(r);
 							}
