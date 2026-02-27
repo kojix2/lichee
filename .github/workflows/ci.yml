@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build-and-smoke-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        java-version: [17, 21]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+
+      - name: Show Java version
+        run: |
+          java -version
+          javac -version
+
+      - name: Build jar
+        working-directory: LICHeE
+        run: make lichee.jar
+
+      - name: Smoke test (CLI, no GUI)
+        working-directory: LICHeE
+        run: |
+          ./release/lichee \
+            -build \
+            -i data/ccRCC/RK26.txt \
+            -maxVAFAbsent 0.005 \
+            -minVAFPresent 0.005 \
+            -n 0 \
+            -dotFile "$RUNNER_TEMP/rk26.dot"
+          test -s "$RUNNER_TEMP/rk26.dot"

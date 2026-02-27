@@ -1,3 +1,10 @@
 #!/bin/sh
-java -jar lichee.jar "$@"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if [ ! -f "$SCRIPT_DIR/lichee.jar" ]; then
+	echo "error: $SCRIPT_DIR/lichee.jar not found. build it first: (cd $SCRIPT_DIR/.. && make lichee.jar)" >&2
+	exit 1
+fi
+
+java -cp "$SCRIPT_DIR/lichee.jar:$SCRIPT_DIR/../lib/*" lineage.LineageEngine "$@"
 exit

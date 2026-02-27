@@ -66,6 +66,12 @@ For best results users are advised to explore the parameters exposed by the meth
 
 ### How to Run
 
+Build from source first (from /LICHeE):
+
+```
+make lichee.jar
+```
+
 From the /release directory:
 
 ```
