@@ -13,14 +13,14 @@ public class Parameters {
 	protected static double MAX_VAF_ABSENT = 0.005;
 	protected static int MIN_SNVS_PER_GROUP = 1;  
 	protected static int MIN_ROBUST_SNVS_PER_GROUP = 0;  
-	protected static double MIN_GROUP_PROFILE_SUPPORT = 2;  
+	protected static int MIN_GROUP_PROFILE_SUPPORT = 2;  
 	protected static double MIN_VAF_TARGET_RATIO_PER_SAMPLE = 0.5;
 	
 	// Clusters
 	/** Minimum size a sub-population cluster must have to be a considered a node in the network */
 	protected static int MIN_CLUSTER_SIZE = 2;
 	protected static int MIN_PRIVATE_CLUSTER_SIZE = 1; 
-	protected static double MIN_ROBUST_CLUSTER_SUPPORT = 2;
+	protected static int MIN_ROBUST_CLUSTER_SUPPORT = 2;
 	
 	/** Maximum centroid difference up to which two clusters can be collapsed */
 	protected static double MAX_COLLAPSE_CLUSTER_DIFF = 0.2; 
