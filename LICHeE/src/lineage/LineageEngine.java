@@ -145,7 +145,7 @@ public class LineageEngine {
 					Visualizer.showLineageTree(display);
 				}
 				if(i == 0 && args.outputDOTFileName != null) { // top tree only for simplicity
-					String parentDir = new File(args.outputDOTFileName).getParent();
+					String parentDir = new File(args.outputDOTFileName).getAbsoluteFile().getParent();
 					writeTreeToDOTFile(display.toDOT(parentDir), db.getSampleNames(), args);
 				}
 			}
