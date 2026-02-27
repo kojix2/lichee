@@ -282,6 +282,10 @@ public class LineageEngine {
 			hf.printHelp("lichee", options);
 			System.exit(-1);
 		}
+		if(cmdLine.hasOption("h")) {
+			hf.printHelp("lichee", options);
+			System.exit(0);
+		}
 		
 		// Set-up input args
 		Args params = new Args();	
@@ -376,9 +380,6 @@ public class LineageEngine {
 		}
 		if(cmdLine.hasOption("nTreeQPCheck")) {
 			Parameters.NUM_TREES_FOR_CONSISTENCY_CHECK = Integer.parseInt(cmdLine.getOptionValue("nTreeQPCheck"));
-		}
-		if(cmdLine.hasOption("h")) {
-			new HelpFormatter().printHelp(" ", options);
 		}
 		// logger
 		ConsoleHandler h = new ConsoleHandler();
