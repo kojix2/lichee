@@ -212,7 +212,7 @@ public class LineageEngine {
 		// Input/Output/Display
 		options.addOption("i", true, "Input file path [required]");
 		options.addOption("o", true, "Output file path (default: input file with suffix .trees.txt)");
-		options.addOption("cp", false, "Input data represents cell prevalaence (CP) values");
+		options.addOption("cp", false, "Input data represents cell prevalence (CP) values");
 		options.addOption("sampleProfile", false, "Input file contains the SSNV sample presence-absence profile (this will disable the default SSNV calling step)");
 		options.addOption("n", "normal", true, "Normal sample column id in the list of samples, 0-based (e.g 0 is the first column) [required without -sampleProfile]");
 		options.addOption("clustersFile", true, "SSNV clusters file path");
@@ -274,7 +274,7 @@ public class LineageEngine {
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmdLine = null;
 		HelpFormatter hf = new HelpFormatter();
-		hf.setOptionComparator(new OptionComarator<Option>(optionsList));
+		hf.setOptionComparator(new OptionComparator<Option>(optionsList));
 		try {
 			cmdLine = parser.parse(options, args);
 		} catch (ParseException e) {
@@ -431,9 +431,9 @@ public class LineageEngine {
 		}
 	}
 	
-	protected static class OptionComarator<T extends Option> implements Comparator<T> {
+	protected static class OptionComparator<T extends Option> implements Comparator<T> {
 	    protected ArrayList<Option> orderedOptions;
-	    public OptionComarator(ArrayList<Option> options) {
+	    public OptionComparator(ArrayList<Option> options) {
 	    	orderedOptions = options;
 	    }
 	    public int compare(T o1, T o2) {
